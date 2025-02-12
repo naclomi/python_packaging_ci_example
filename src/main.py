@@ -8,7 +8,8 @@ if __name__ == "__main__":
     panel = wx.Panel(window)
 
     fancy_hello = art.text2art("Hello\nWorld", "random")
-    font = wx.Font(12, wx.FONTFAMILY_TELETYPE, 0, 100, underline=False, faceName="")
+    font = wx.Font(12, wx.FONTFAMILY_TELETYPE, 0, 100,
+                   underline=False, faceName="")
     label = wx.StaticText(panel, label=fancy_hello, pos=(10, 10))
     label.SetFont(font)
 
