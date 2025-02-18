@@ -15,7 +15,7 @@ jobs:
     - name: Wxwidgets setup
       run: |
          if [ "$RUNNER_OS" == "Linux" ]; then
-              apt install python-wxgtk3.0 python-wxgtk3.0-dev
+              sudo apt-get install python-wxgtk3.0 python-wxgtk3.0-dev
          else
               echo "$RUNNER_OS not supported"
               exit 1
