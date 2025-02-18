@@ -12,6 +12,15 @@ jobs:
     - uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v3
+    - name: Wxwidgets setup
+      run: |
+         if [ "$RUNNER_OS" == "Linux" ]; then
+              apt install python-wxgtk3.0 python-wxgtk3.0-dev
+         else
+              echo "$RUNNER_OS not supported"
+              exit 1
+         fi
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
