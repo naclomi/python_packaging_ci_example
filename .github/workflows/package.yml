@@ -21,7 +21,7 @@ jobs:
       with:
         miniforge-version: latest
         python-version: ${{ env.PYTHON }}
-        environment-file: ${{ env.ENV_NAME }}.yaml
+        environment-file: ${{ env.ENV_NAME }}.yml
         activate-environment: ${{ env.ENV_NAME }}
     - name: Conda Info
       run: |
