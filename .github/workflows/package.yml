@@ -5,41 +5,55 @@ on: workflow_dispatch
 jobs:
   build:
 
-    # runs-on: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ubuntu-latest
+
+    env:
+      ENV_NAME: packaging-env
+      PYTHON: 3.10
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v3
-    # TODO: install binary wheel on linux from:
-    #       https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-${lsb_release -r -s}/wxPython-${WX_VERSION}-cp${PY_VERSION}-cp${PY_VERSION}-linux_x86_64.whl
-    # PYTHON_INTERPRETER_TAG=cp$(python3 -c 'import platform; print("".join(platform.python_version_tuple()[:2]))')
-    # WX_VERSION=$(python3 -c ' ')
-    # pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-$(lsb_release -r -s)
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8
-        if [ "$RUNNER_OS" == "Linux" ]; then
-              # TODO: probably not necessary with prebuilt wheels:
-              # sudo apt-get update
-              # sudo apt-get install -y dpkg-dev build-essential libjpeg-dev libtiff-dev libsdl1.2-dev libgstreamer-plugins-base1.0-dev libnotify-dev libsm-dev libgtk-3-dev libxtst-dev
-
-              # On Linux, need to manually point pip to prebuilt wheel archive
-              # as per https://extras.wxpython.org/wxPython4/extras/README.txt
-              python -m pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-$(lsb_release -r -s) -r requirements.txt
-        else
-              python -m pip install -r requirements.txt;
-        fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Create Executable
-      uses: sayyid5416/pyinstaller@v1
+    - name: Setup Miniconda
+      uses: conda-incubator/setup-miniconda@v3
       with:
-        spec: 'main.spec'
-        upload_exe_with_name: 'hello-world'
+        miniforge-version: latest
+        python-version: ${{ env.PYTHON }}
+        environment-file: ${{ env.ENV_NAME }}.yaml
+        activate-environment: ${{ env.ENV_NAME }}
+    - name: Conda Info
+      run: |
+        conda info -a
+        conda list
+        PYVER=`python -c "import sys; print('{:d}.{:d}'.format(sys.version_info.major, sys.version_info.minor))"`
+        if [[ $PYVER != ${{ env.PYTHON }} ]]; then
+          exit 1;
+        fi
+
+    - name: Package
+      run: |
+        pyinstaller main.spec
+
+    # - name: Set up Python
+    #   uses: actions/setup-python@v3
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install flake8
+    #     if [ "$RUNNER_OS" == "Linux" ]; then
+    #           # On Linux, we need to manually point pip to prebuilt wheel archive
+    #           # as per https://extras.wxpython.org/wxPython4/extras/README.txt
+    #           python -m pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-$(lsb_release -r -s) -r requirements.txt
+    #     else
+    #           python -m pip install -r requirements.txt;
+    #     fi
+    # - name: Lint with flake8
+    #   run: |
+    #     # stop the build if there are Python syntax errors or undefined names
+    #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+    #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+    #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    # - name: Create Executable
+    #   uses: sayyid5416/pyinstaller@v1
+    #   with:
+    #     spec: 'main.spec'
+    #     upload_exe_with_name: 'hello-world'
