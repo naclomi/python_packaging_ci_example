@@ -1,0 +1,8 @@
+name: packaging-env
+channels:
+  - conda-forge
+dependencies:
+  - pyinstaller
+  - wxpython
+  - pip:
+    - art
