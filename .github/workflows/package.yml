@@ -10,7 +10,7 @@ jobs:
 
     env:
       ENV_NAME: packaging-env
-      PYTHON: 3.10
+      PYTHON: "3.10"
     defaults:
       run:
         # Adding -l {0} helps ensure conda can be found properly.
