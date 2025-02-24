@@ -39,7 +39,7 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.RUNNER_OS }}-executable
+        name: ${{ RUNNER_OS }}-executable
         path: ./dist
 
     # - name: Set up Python
