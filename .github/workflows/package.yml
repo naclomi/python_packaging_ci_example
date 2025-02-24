@@ -35,7 +35,7 @@ jobs:
 
     - name: Package
       run: |
-        pyinstaller main.spec
+        pyinstaller main.$RUNNER_OS.spec
 
     # - name: Set up Python
     #   uses: actions/setup-python@v3
