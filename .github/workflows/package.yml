@@ -1,6 +1,7 @@
 name: PyInstaller packaging example
 
-on: workflow_dispatch
+# on: workflow_dispatch
+on: push
 
 jobs:
   build:
