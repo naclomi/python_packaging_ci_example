@@ -10,7 +10,10 @@ jobs:
     env:
       ENV_NAME: packaging-env
       PYTHON: 3.10
-
+    defaults:
+      run:
+        # Adding -l {0} helps ensure conda can be found properly.
+        shell: bash -l {0}
     steps:
     - uses: actions/checkout@v4
     - name: Setup Miniconda
